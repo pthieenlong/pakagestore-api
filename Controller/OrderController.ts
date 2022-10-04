@@ -4,9 +4,6 @@ import Order from "../Model/Order";
 import Product from "../Model/Product";
 
 export class OrderController {
-    public getOrder = async (req: Request, res: Response) => {
-        
-    }
     public createOrder = async (req: Request, res: Response) => {
         const { owner } = req.body;
         if(!owner) return res.status(400).json({ message: "Properties are required!"} );
@@ -43,24 +40,58 @@ export class OrderController {
     public deleteOrder = async (req: Request, res: Response) => {
         
     }
-    public addItem = async (req: Request, res: Response) => {
-        const { owner, item } = req.body;
-        if(!item || !owner) return res.status(400).json({ message: "Properties are required!" });
-        const order = await Order.findOne({ owner: owner, status: CART_STATUS.UNPAY });
-        if(!order) return res.status(204).json({ message: "Order not founded "});
-        const items = order.items;
-        const product = await Product.find({ _id: item.id });
-        if(!product) return res.status(204).json({ message: "Product not founded!" });
+    public getOrder = async (req: Request, res: Response) => {
         
-
     }
-    public removeItem = async (req: Request, res: Response) => {
-        
+    public addItem = async (req: Request, res: Response) => {
+        const { owner, itemID } = req.body;
+        if(!itemID || !owner) return res.status(400).json({ message: "Properties are required!" });
+        const order = await Order.findOne({ owner: owner, status: CART_STATUS.UNPAY }).exec();
+        if(!order) return res.status(204).json({ message: "Order not founded "});
+        const product = await Product.findOne({ _id: itemID }).exec();
+        if(!product) return res.status(204).json({ message: "Product not founded!" });
+        const items = order.items;
+        const findItem = items.find((val) => val.id == product.id);
+        if(findItem) {
+            findItem.quantity += 1;
+            findItem.price += product.price;
+
+            order.items[items.findIndex((val) => { val.id == findItem.id })] = findItem;
+            await order.save();
+
+            return res.status(200).json({ message: "Updated success!" });
+        } else {
+            order.items.push({
+                id: product.id,
+                name: product.name,
+                quantity: 1,
+                price: product.price,
+            });
+            const result = await order.save();
+            return res.status(200).json({ message: "Add item success!" });
+        }
     }
     public updateItem = async (req: Request, res: Response) => {
-        
+        const { owner, itemID, quantity } = req.body;
+        if(!itemID || owner || quantity) return res.status(400).json({ message: "Properties are required!" });
+        const order = await Order.findOne({ owner: owner, status: CART_STATUS.UNPAY }).exec();
+        if(!order) return res.status(204).json({ message: "Order not founded" });
+        const product = await Product.findOne({ _id: itemID }).exec();
+        if(!product) return res.status(204).json({ message: "Product not founded" });
+        const items = order.items;
+        const findItem = items.find((val) => val.id == product.id);
+        if(findItem) {
+            findItem.quantity = quantity;
+            findItem.price = (product.price * quantity);
+
+            order.items[items.findIndex((val) => { val.id == findItem.id })] = findItem;
+            await order.save();
+
+            return res.status(200).json({ message: "Update success!" });
+        }
     }
     public deleteItem = async (req: Request, res: Response) => {
-        
+        const { owner, itemID } = req.body;
+        // if(!owner || !itemID)
     }
 }
