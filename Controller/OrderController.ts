@@ -92,6 +92,7 @@ export class OrderController {
     }
     public deleteItem = async (req: Request, res: Response) => {
         const { owner, itemID } = req.body;
-        // if(!owner || !itemID)
+        if(!owner || !itemID) return res.status(400).json({ message: "Properties are required!" });
+        
     }
 }
