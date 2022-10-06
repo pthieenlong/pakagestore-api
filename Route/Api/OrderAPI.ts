@@ -11,9 +11,9 @@ router.route('/')
     .delete(orderController.deleteItem);
 
 router.route('/:owner')
-    .get(verifyJWT, orderController.getOrderOfOwner)
-    .post(verifyJWT, orderController.createOrder)
-    .patch(verifyJWT, orderController.updateOrder)
-    .delete(verifyJWT, orderController.deleteOrder)
+    .get(orderController.getOrderOfOwner)
+    .post(orderController.createOrder)
+    .patch(orderController.updateOrder)
+    .delete(orderController.deleteOrder)
 export = router;
 module.exports = router;

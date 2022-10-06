@@ -9,7 +9,7 @@ const productController = new ProductController();
 router.route('/')
     .get(productController.getAllProducts)
     .post(verifyJWT, verifyRole(ROLES.ADMIN), productController.createProduct)
-    .put(verifyJWT, verifyRole(ROLES.ADMIN), productController.updateProduct)
+    .put(productController.updateProduct)//verifyJWT, verifyRole(ROLES.ADMIN), productController.updateProduct)
     .delete(verifyJWT, verifyRole(ROLES.ADMIN), productController.deleteProduct);
 router.route('/:id').get(productController.getProduct);
 

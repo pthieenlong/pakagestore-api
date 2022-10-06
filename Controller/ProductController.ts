@@ -10,7 +10,6 @@ export class ProductController {
     return res.json(products);
   };
   public createProduct = async (req:Request, res: Response) => {
-    console.log('on product create');
     const { name, price, image, desc } = req.body;
     if(!name || !price || !image) 
       return res.status(400).json({
@@ -22,7 +21,7 @@ export class ProductController {
       const result = await Product.create({
         'name': name,
         'price': price,
-        'image': image,
+        'image': `./assets/game/${image}`,
         'desc': desc,
       });
   
@@ -56,12 +55,12 @@ export class ProductController {
 
     if(req.body.name) product.name = req.body.name;
     if(req.body.price) product.price = req.body.price;
-    if(req.body.image) product.image = req.body.image;
+    if(req.body.image) product.image = `./assets/game/${req.body.image}`;
     if(req.body.desc) product.image = req.body.desc;
     
     const result = await product.save();
 
-    res.json(result);
+    res.json( {message: "Update Successed!"} );
   }
   public deleteProduct = async (req: Request, res: Response) => {
     if(!req.body.id) return res.status(400).json({
