@@ -3,10 +3,13 @@ import CART_STATUS from "../Config/CartStatus";
 
 interface IOrder {
     owner: string,
+    name: string,
+    email: string,
     items: [
         {
             id: string,
             name: string,
+            image: string,
             quantity: number,
             price: number,
         }
@@ -20,6 +23,12 @@ const orderSchema = new Schema<IOrder>({
         type: String,
         required: true,
     },
+    name: {
+        type: String,
+    },
+    email: {
+        type: String,
+    },
     items: {
         type: [{
             id: {
@@ -29,6 +38,9 @@ const orderSchema = new Schema<IOrder>({
             name: {
                 type: String,
                 required: true
+            },
+            image: {
+                type: String,
             },
             quantity: {
                 type: Number,

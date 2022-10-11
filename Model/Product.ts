@@ -5,6 +5,7 @@ interface IProduct {
   price: number,
   image: string,
   desc: string,
+  cates: string[],
 }
 const productSchema = new Schema<IProduct>({
   name: {
@@ -20,6 +21,13 @@ const productSchema = new Schema<IProduct>({
   },
   desc: {
     type: String,
+  },
+  cates: {
+    type: [
+      {
+        name: String,
+      }
+    ]
   }
 });
 export default mongoose.model("Product", productSchema);

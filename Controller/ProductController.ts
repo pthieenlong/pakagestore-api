@@ -10,8 +10,8 @@ export class ProductController {
     return res.json(products);
   };
   public createProduct = async (req:Request, res: Response) => {
-    const { name, price, image, desc } = req.body;
-    if(!name || !price || !image) 
+    const { name, price, image, desc, category } = req.body;
+    if(!name || !price || !image || !category) 
       return res.status(400).json({
         message: "Name, price and image are required"
       });
@@ -23,6 +23,7 @@ export class ProductController {
         'price': price,
         'image': `./assets/game/${image}`,
         'desc': desc,
+        'category': category
       });
   
       res.status(201).json({ 'message': 'create product success'});
@@ -57,6 +58,7 @@ export class ProductController {
     if(req.body.price) product.price = req.body.price;
     if(req.body.image) product.image = `./assets/game/${req.body.image}`;
     if(req.body.desc) product.image = req.body.desc;
+    if(req.body.category) product.image = req.body.category;
     
     const result = await product.save();
 
